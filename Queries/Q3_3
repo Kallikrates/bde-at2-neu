@@ -1,0 +1,18 @@
+CREATE MATERIALIZED VIEW IF NOT EXISTS 
+	at2_datamart.Question_3_3_estimated_revenue_per_host AS
+
+select 
+	h.host_lga_cleansed,
+	h.year_month,
+	distinct_host_count,
+	r.estimated_revenue_per_active_listings estimated_revenue,
+	ROUND(r.estimated_revenue_per_active_listings/distinct_host_count,2) estimated_revenue_per_host
+from 
+	at2_datamart.question_3_1_distinct_hosts h
+inner join
+	at2_datamart.question_3_2_estimated_revenue_active_listings r
+	on r.host_lga_cleansed = h.host_lga_cleansed
+	and r.year_month = h.year_month
+;
+REFRESH MATERIALIZED VIEW at2_datamart.Question_3_3_estimated_revenue_per_host
+;
